@@ -12,7 +12,7 @@ public class HystrixCommandAdvice {
     private String groupName;
     private String commandName;
 
-    @Around("anyMethod()")
+    @Around("anyMethod() && @annotation(performance)")
     public Object runCommand(final ProceedingJoinPoint pjp) {
         return wrapWithHystrixCommnad(pjp).execute();
     }
