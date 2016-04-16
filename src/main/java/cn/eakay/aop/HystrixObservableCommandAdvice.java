@@ -28,7 +28,7 @@ public class HystrixObservableCommandAdvice {
     public Object excuteCommand(final ProceedingJoinPoint pjp, MyHystrixObservableCommand hystrixObservableCommand) throws Exception{
         MethodInvokeData fallbackMethod = null;
         if(!hystrixObservableCommand.resumeWithFallbackMethod().equals("")){
-            fallbackMethod = generateresumeWithFallbackMethod(pjp, hystrixObservableCommand.resumeWithFallbackMethod());
+            fallbackMethod = generateMethodInvokeData(pjp, hystrixObservableCommand.resumeWithFallbackMethod());
         }
         return generateHystrixObservableCommand(pjp, fallbackMethod).observe().toBlocking().toFuture().get();
     }
@@ -41,7 +41,6 @@ public class HystrixObservableCommandAdvice {
                     @Override
                     public void call(Subscriber<? super Object> subscriber) {
                         try {
-                            Thread.sleep(2000);
                             subscriber.onNext(pjp.proceed());
                             subscriber.onCompleted();
                         } catch (Throwable ex) {
@@ -78,7 +77,7 @@ public class HystrixObservableCommandAdvice {
                 .andCommandKey(HystrixCommandKey.Factory.asKey("command-name"));
     }
 
-    private MethodInvokeData generateresumeWithFallbackMethod(final ProceedingJoinPoint pjp, String methodName) throws NoSuchMethodException{
+    private MethodInvokeData generateMethodInvokeData(final ProceedingJoinPoint pjp, String methodName) throws NoSuchMethodException{
         Class clz = pjp.getTarget().getClass();
         Object[] args = pjp.getArgs();
         Object targetObj = pjp.getTarget();
