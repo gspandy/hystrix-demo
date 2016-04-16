@@ -1,6 +1,7 @@
 package cn.eakay.controller;
 
 import cn.eakay.biz.TestHystrixService;
+import cn.eakay.biz.UserHystrixCommand;
 import cn.eakay.domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,7 +31,7 @@ public class TestController {
 
     @RequestMapping(value = "/getUserHystrix", method = RequestMethod.GET)
     public User getUserHystrix() throws Exception{
-        return hystrixService.getUser();
+        return new UserHystrixCommand().execute();
     }
 
 }

@@ -1,5 +1,6 @@
 package cn.eakay.aop;
 
+import cn.eakay.aop.annotation.MyHystrixCommand;
 import com.netflix.hystrix.HystrixCommand;
 import com.netflix.hystrix.HystrixCommandGroupKey;
 import com.netflix.hystrix.HystrixCommandKey;
@@ -12,8 +13,10 @@ public class HystrixCommandAdvice {
     private String groupName;
     private String commandName;
 
-    @Around("anyMethod() && @annotation(performance)")
-    public Object runCommand(final ProceedingJoinPoint pjp) {
+    @Around("anyMethod() && @annotation(hystrixCommand)")
+    public Object runCommand(final ProceedingJoinPoint pjp, MyHystrixCommand hystrixCommand) {
+        String fallbackMethod = hystrixCommand.fallbackMethod().equals("") ? null : hystrixCommand.fallbackMethod();
+        
         return wrapWithHystrixCommnad(pjp).execute();
     }
 
@@ -35,6 +38,8 @@ public class HystrixCommandAdvice {
             }
         };
     }
+
+
 
     private HystrixCommand.Setter setter() {
         return HystrixCommand.Setter
