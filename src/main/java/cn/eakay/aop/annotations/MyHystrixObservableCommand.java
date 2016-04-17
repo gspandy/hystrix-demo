@@ -11,6 +11,8 @@ import java.lang.annotation.*;
 @Documented
 public @interface MyHystrixObservableCommand {
 
+    String groupKey() default "";
+    String commandKey() default "";
     String resumeWithFallbackMethod() default "";
 
 }

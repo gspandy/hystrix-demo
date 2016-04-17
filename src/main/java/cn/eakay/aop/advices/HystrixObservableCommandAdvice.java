@@ -14,8 +14,6 @@ import org.springframework.stereotype.Component;
 import rx.Observable;
 import rx.Subscriber;
 
-import java.lang.reflect.Method;
-
 /**
  * Created by xialei on 16/4/16.
  */
@@ -29,11 +27,13 @@ public class HystrixObservableCommandAdvice {
     public Object excuteCommand(final ProceedingJoinPoint pjp, MyHystrixObservableCommand hystrixObservableCommand) throws Exception {
         MethodInvokeData fallbackMethod = hystrixObservableCommand.resumeWithFallbackMethod().equals("") ? null :
                 AopUtils.generateMethodInvokeData(pjp, hystrixObservableCommand.resumeWithFallbackMethod());
-        return generateHystrixObservableCommand(pjp, fallbackMethod).observe().toBlocking().toFuture().get();
+        String groupKey = hystrixObservableCommand.groupKey().equals("") ? pjp.getTarget().getClass().getSimpleName() : hystrixObservableCommand.groupKey();
+        String commandKey = hystrixObservableCommand.commandKey().equals("") ? pjp.getSignature().getName() : hystrixObservableCommand.commandKey();
+        return generateHystrixObservableCommand(pjp, fallbackMethod, groupKey, commandKey).observe().toBlocking().toFuture().get();
     }
 
-    private HystrixObservableCommand<Object> generateHystrixObservableCommand(final ProceedingJoinPoint pjp, MethodInvokeData fallbackMethod) {
-        return new HystrixObservableCommand<Object>(setter()) {
+    private HystrixObservableCommand<Object> generateHystrixObservableCommand(final ProceedingJoinPoint pjp, MethodInvokeData fallbackMethod, String groupKey, String commandKey) {
+        return new HystrixObservableCommand<Object>(setter(groupKey, commandKey)) {
             @Override
             protected Observable<Object> construct() {
                 //lambdas 表达式
@@ -69,11 +69,10 @@ public class HystrixObservableCommandAdvice {
         };
     }
 
-    //TODO 动态注册group-name和command-name
-    private HystrixObservableCommand.Setter setter() {
+    private HystrixObservableCommand.Setter setter(String groupKey, String commandKey) {
         return HystrixObservableCommand.Setter
-                .withGroupKey(HystrixCommandGroupKey.Factory.asKey("group-name"))
-                .andCommandKey(HystrixCommandKey.Factory.asKey("command-name"));
+                .withGroupKey(HystrixCommandGroupKey.Factory.asKey(groupKey))
+                .andCommandKey(HystrixCommandKey.Factory.asKey(commandKey));
     }
 
 }
