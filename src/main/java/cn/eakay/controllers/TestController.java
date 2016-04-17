@@ -1,10 +1,10 @@
-package cn.eakay.controller;
+package cn.eakay.controllers;
 
-import cn.eakay.biz.TestHystrixService;
-import cn.eakay.biz.UserHystrixCommand;
-import cn.eakay.biz.UserHystrixObservableCommand;
-import cn.eakay.biz.UserService;
-import cn.eakay.domain.User;
+import cn.eakay.services.TestHystrixService;
+import cn.eakay.services.UserHystrixCommand;
+import cn.eakay.services.UserHystrixObservableCommand;
+import cn.eakay.services.UserService;
+import cn.eakay.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,7 +31,7 @@ public class TestController {
     }
 
     @RequestMapping(value = "/getUser/{username}/{password}", method = RequestMethod.GET)
-    public User getUserByParam(@PathVariable(value = "username") String username, @PathVariable(value = "password")String password) {
+    public User getUserByParam(@PathVariable(value = "username") String username, @PathVariable(value = "password")String password) throws Exception{
         return userService.getUserByParam(username, password);
     }
 

@@ -1,7 +1,8 @@
-package cn.eakay.aop;
+package cn.eakay.aop.advices;
 
-import cn.eakay.aop.annotation.MyHystrixObservableCommand;
-import cn.eakay.domain.MethodInvokeData;
+import cn.eakay.aop.annotations.MyHystrixObservableCommand;
+import cn.eakay.domains.MethodInvokeData;
+import cn.eakay.utils.AopUtils;
 import com.netflix.hystrix.HystrixCommandGroupKey;
 import com.netflix.hystrix.HystrixCommandKey;
 import com.netflix.hystrix.HystrixObservableCommand;
@@ -25,11 +26,9 @@ import java.lang.reflect.Method;
 public class HystrixObservableCommandAdvice {
 
     @Around(value = "execution(* *(..)) && @annotation(hystrixObservableCommand)", argNames = "pjp,hystrixObservableCommand")
-    public Object excuteCommand(final ProceedingJoinPoint pjp, MyHystrixObservableCommand hystrixObservableCommand) throws Exception{
-        MethodInvokeData fallbackMethod = null;
-        if(!hystrixObservableCommand.resumeWithFallbackMethod().equals("")){
-            fallbackMethod = generateMethodInvokeData(pjp, hystrixObservableCommand.resumeWithFallbackMethod());
-        }
+    public Object excuteCommand(final ProceedingJoinPoint pjp, MyHystrixObservableCommand hystrixObservableCommand) throws Exception {
+        MethodInvokeData fallbackMethod = hystrixObservableCommand.resumeWithFallbackMethod().equals("") ? null :
+                AopUtils.generateMethodInvokeData(pjp, hystrixObservableCommand.resumeWithFallbackMethod());
         return generateHystrixObservableCommand(pjp, fallbackMethod).observe().toBlocking().toFuture().get();
     }
 
@@ -70,22 +69,11 @@ public class HystrixObservableCommandAdvice {
         };
     }
 
+    //TODO 动态注册group-name和command-name
     private HystrixObservableCommand.Setter setter() {
         return HystrixObservableCommand.Setter
                 .withGroupKey(HystrixCommandGroupKey.Factory.asKey("group-name"))
                 .andCommandKey(HystrixCommandKey.Factory.asKey("command-name"));
-    }
-
-    private MethodInvokeData generateMethodInvokeData(final ProceedingJoinPoint pjp, String methodName) throws NoSuchMethodException{
-        Class clz = pjp.getTarget().getClass();
-        Object[] args = pjp.getArgs();
-        Object targetObj = pjp.getTarget();
-        Class[] paramClzs = new Class[args.length];
-        for (int i = 0; i < args.length; i++) {
-            paramClzs[i] = args[i].getClass();
-        }
-        Method method = clz.getMethod(methodName, paramClzs);
-        return new MethodInvokeData(targetObj, method, args);
     }
 
 }

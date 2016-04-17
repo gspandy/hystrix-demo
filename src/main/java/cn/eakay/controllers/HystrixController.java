@@ -1,4 +1,4 @@
-package cn.eakay.controller;
+package cn.eakay.controllers;
 
 import org.springframework.web.bind.annotation.RestController;
 

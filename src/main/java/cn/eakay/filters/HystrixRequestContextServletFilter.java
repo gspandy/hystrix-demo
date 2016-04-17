@@ -1,4 +1,4 @@
-package cn.eakay.filter;
+package cn.eakay.filters;
 
 
 import com.netflix.hystrix.strategy.concurrency.HystrixRequestContext;

@@ -1,6 +1,6 @@
-package cn.eakay.biz;
+package cn.eakay.services;
 
-import cn.eakay.domain.User;
+import cn.eakay.models.User;
 import org.springframework.stereotype.Service;
 
 /**

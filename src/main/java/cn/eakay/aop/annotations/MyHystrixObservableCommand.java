@@ -1,4 +1,4 @@
-package cn.eakay.aop.annotation;
+package cn.eakay.aop.annotations;
 
 import java.lang.annotation.*;
 

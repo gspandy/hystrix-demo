@@ -1,4 +1,4 @@
-package cn.eakay.domain;
+package cn.eakay.domains;
 
 import lombok.Data;
 

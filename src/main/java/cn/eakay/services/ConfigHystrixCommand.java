@@ -1,4 +1,4 @@
-package cn.eakay.biz;
+package cn.eakay.services;
 
 import com.netflix.hystrix.HystrixCommand;
 import com.netflix.hystrix.HystrixCommandGroupKey;

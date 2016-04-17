@@ -45,7 +45,7 @@
     <filter>
         <display-name>HystrixRequestContextServletFilter</display-name>
         <filter-name>HystrixRequestContextServletFilter</filter-name>
-        <filter-class>cn.eakay.filter.HystrixRequestContextServletFilter</filter-class>
+        <filter-class>cn.eakay.filters.HystrixRequestContextServletFilter</filter-class>
     </filter>
     <filter-mapping>
         <filter-name>HystrixRequestContextServletFilter</filter-name>

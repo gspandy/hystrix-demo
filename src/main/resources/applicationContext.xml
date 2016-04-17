@@ -10,11 +10,10 @@
 
     <context:annotation-config/>
     <aop:aspectj-autoproxy/>
-    <context:component-scan base-package="cn.eakay.biz"/>
-    <context:component-scan base-package="cn.eakay.aop"/>
+    <context:component-scan base-package="cn.eakay.services"/>
+    <context:component-scan base-package="cn.eakay.aop.advices"/>
 
 
     <!--import context config-->
     <import resource="classpath:mvc/spring-mvc.xml"/>
-
 </beans>

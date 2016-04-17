@@ -1,7 +1,7 @@
-package cn.eakay.biz;
+package cn.eakay.services;
 
-import cn.eakay.aop.annotation.MyHystrixObservableCommand;
-import cn.eakay.domain.User;
+import cn.eakay.aop.annotations.MyHystrixObservableCommand;
+import cn.eakay.models.User;
 import org.springframework.stereotype.Service;
 
 /**
@@ -30,7 +30,8 @@ public class UserService {
     }
 
     @MyHystrixObservableCommand(resumeWithFallbackMethod = "getUserByParamDefault")
-    public User getUserByParam(String username, String password) {
+    public User getUserByParam(String username, String password) throws Exception{
+        Thread.sleep(2000);
         return new User(username, password);
     }
 
