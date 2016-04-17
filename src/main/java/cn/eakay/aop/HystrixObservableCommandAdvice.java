@@ -37,9 +37,8 @@ public class HystrixObservableCommandAdvice {
         return new HystrixObservableCommand<Object>(setter()) {
             @Override
             protected Observable<Object> construct() {
-                return Observable.create(new Observable.OnSubscribe<Object>() {
-                    @Override
-                    public void call(Subscriber<? super Object> subscriber) {
+                //lambdas 表达式
+                return Observable.create(subscriber -> {
                         try {
                             subscriber.onNext(pjp.proceed());
                             subscriber.onCompleted();
@@ -47,7 +46,7 @@ public class HystrixObservableCommandAdvice {
                             subscriber.onError(ex);
                         }
                     }
-                });
+                );
             }
 
             @Override
